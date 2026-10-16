@@ -1,59 +1,262 @@
-# PruebaContableV2
+Prueba Técnica - Validación Contable de Facturas
+Descripción
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.27.
+Aplicación desarrollada para validar información contable de facturas a partir de dos archivos CSV:
 
-## Development server
+Archivo de Facturas
+Archivo de Contabilidad
 
-To start a local development server, run:
+La solución realiza validaciones automáticas para identificar inconsistencias contables y generar reportes para análisis.
 
-```bash
+Funcionalidades
+Frontend (Angular)
+Carga de archivo CSV de facturas.
+Carga de archivo CSV de contabilidad.
+Validación de archivos requeridos.
+Visualización de resultados.
+Resumen ejecutivo:
+Total de facturas.
+Facturas correctas.
+Facturas con inconsistencias.
+Filtro por estado.
+Exportación de reporte completo.
+Exportación de reporte de inconsistencias.
+Manejo de errores amigable.
+Backend (FastAPI)
+
+Validaciones implementadas:
+
+Facturas duplicadas.
+Validación de IVA.
+Validación de total de factura.
+Registro contable asociado.
+Validación de campos obligatorios.
+Partida doble (Débito = Crédito).
+Validación de estructura de archivos CSV.
+Arquitectura
+Plain Text
+Frontend Angular
+|
+| HTTP POST
+v
+Backend FastAPI
+|
+v
+Procesamiento con Pandas
+|
+v
+Resultados JSON
+Tecnologías Utilizadas
+Frontend
+Angular 21
+TypeScript
+HTML
+CSS
+Backend
+Python 3.9+
+FastAPI
+Pandas
+Uvicorn
+Requisitos Previos
+
+Instalar:
+
+Node.js 24 o superior
+npm 11 o superior
+Python 3.9 o superior
+
+Verificar versiones:
+
+Shell
+node -v
+Shell
+npm -v
+Shell
+python --version
+Instalación Backend
+
+Ubicarse en la carpeta backend:
+
+Shell
+cd backend
+
+Crear entorno virtual:
+
+Shell
+python -m venv venv
+
+Activar entorno virtual:
+
+Windows
+Shell
+venv\Scripts\activate
+Linux / Mac
+Shell
+source venv/bin/activate
+
+Instalar dependencias:
+
+Shell
+pip install fastapi
+Shell
+pip install uvicorn
+Shell
+pip install pandas
+Shell
+pip install python-multipart
+
+O instalar desde requirements.txt:
+
+Shell
+pip install -r requirements.txt
+Ejecución Backend
+
+Ubicarse en:
+
+Shell
+backend
+
+Ejecutar:
+
+Shell
+uvicorn main:app --reload
+
+La API quedará disponible en:
+
+Plain Text
+http://localhost:8000
+
+Documentación automática:
+
+Plain Text
+http://localhost:8000/docs
+Instalación Frontend
+
+Ubicarse en la carpeta frontend:
+
+Shell
+cd frontend
+
+Instalar dependencias:
+
+Shell
+npm install
+Ejecución Frontend
+
+Ejecutar:
+
+Shell
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+o
 
-## Code scaffolding
+Shell
+npm start
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+La aplicación quedará disponible en:
 
-```bash
-ng generate component component-name
-```
+Plain Text
+http://localhost:4200
+Estructura Esperada del Archivo de Facturas
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Columnas requeridas:
 
-```bash
-ng generate --help
-```
+Plain Text
+id_factura
+nit_proveedor
+fecha_factura
+concepto
+base_gravable
+tarifa_iva
+valor_iva
+tarifa_retencion
+valor_retencion
+total_factura
+Estructura Esperada del Archivo de Contabilidad
 
-## Building
+Columnas requeridas:
 
-To build the project run:
+Plain Text
+id_factura
+fecha_contabilizacion
+cuenta_contable
+centro_costo
+valor_debito
+valor_credito
+estado
+Validaciones Implementadas
+1. Facturas Duplicadas
 
-```bash
-ng build
-```
+Identifica registros repetidos por:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Plain Text
+id_factura
+2. Registro Contable
 
-## Running unit tests
+Verifica que cada factura tenga registro contable asociado.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+3. Validación de IVA
 
-```bash
-ng test
-```
+Calcula:
 
-## Running end-to-end tests
+Plain Text
+base_gravable * tarifa_iva
 
-For end-to-end (e2e) testing, run:
+y compara contra:
 
-```bash
-ng e2e
-```
+Plain Text
+valor_iva
+4. Validación de Total
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Calcula:
 
-## Additional Resources
+Plain Text
+base_gravable + valor_iva - valor_retencion
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+y compara contra:
+
+Plain Text
+total_factura
+5. Campos Obligatorios
+
+Valida:
+
+Plain Text
+nit_proveedor
+fecha_factura
+concepto
+6. Partida Doble
+
+Valida:
+
+Plain Text
+SUM(valor_debito)
+=
+SUM(valor_credito)
+Exportación de Resultados
+
+La aplicación permite descargar:
+
+Reporte Completo
+Plain Text
+Reporte_Completo.csv
+
+Incluye todas las facturas procesadas.
+
+Reporte de Inconsistencias
+Plain Text
+Reporte_Inconsistencias.csv
+
+Incluye únicamente facturas con inconsistencias detectadas.
+
+Manejo de Errores
+
+La solución valida:
+
+Archivos faltantes.
+Formatos incorrectos.
+Estructura inválida del CSV.
+Columnas obligatorias faltantes.
+Errores de comunicación con la API.
+
+Los errores son mostrados al usuario mediante mensajes descriptivos.
